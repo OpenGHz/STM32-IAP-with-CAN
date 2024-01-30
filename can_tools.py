@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import can
-from typing import Optional, List
+from typing import Optional, List, Union
 import time
 from multiprocessing import Queue
 from threading import Thread
@@ -112,21 +112,32 @@ class Caner:
     def send_data(
         self,
         arbitration_id: Optional[int],
-        data: Optional[can.typechecking.CanData],
+        data: Union[can.typechecking.CanData, str],
         is_extended_id: Optional[bool] = False,
     ):
         """
         功能：发送数据
         para1：报文id
-        para2：报文数据
+        para2：报文数据，如：'0011223344556677'，不能直接发送0x0011223344556677，前面两个00会被忽略
         para3：是否为扩展帧
         """
+        if isinstance(data, str):
+            data = bytes.fromhex(data)
         msg = can.Message(
             arbitration_id=arbitration_id,
             is_extended_id=is_extended_id,
             data=data,
         )
         self._bus.send(msg)
+
+    def send_str_hex(self, arbitration_id: Optional[int], data: str):
+        """
+        功能：发送16进制字符串
+        para1：报文id
+        para2：报文数据，如：'0011223344556677'，无Ox前缀
+        """
+        # 数据准备
+        self.send_data(arbitration_id, bytes.fromhex(data))
 
     def set_filters(self, filter_id: Optional[int]):
         """
