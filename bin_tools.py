@@ -13,6 +13,11 @@ class BinTools(object):
         """
         return os.path.exists(file_path)
 
+    @classmethod
+    def ensure_file(cls, file_path):
+        if not cls.check_file(file_path):
+            raise Exception("target file not exists")
+
     @staticmethod
     def ensure_dir(dir_path):
         """
@@ -24,7 +29,7 @@ class BinTools(object):
             os.makedirs(dir_path)
 
     @staticmethod
-    def read_bin_file(file_path, to_byte_list=False):
+    def read_bin_file(file_path, to_list=False, as_str=False):
         """
         读取二进制文件
         :param file_path: 文件路径
@@ -32,7 +37,9 @@ class BinTools(object):
         """
         with open(file_path, "rb") as f:
             data = f.read()
-        if to_byte_list:
+        if as_str:
+            data = data.decode("utf-8")
+        if to_list:
             data = list(data)
         return data
 
@@ -85,7 +92,6 @@ if __name__ == "1":
         num = struct.unpack("B", data)
         print(num[0])
 
-if __name__ == "__main__":
     a = 123
     print("a:", type(a))
     b_big = a.to_bytes(1, "big")
