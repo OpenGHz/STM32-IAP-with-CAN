@@ -38,14 +38,14 @@ from bin_tools import BinTools
 class Caner:
     def __init__(
         self,
-        channel: Optional[str] = 0,
+        channel: Optional[str] = "can0",
         interface: Optional[str] = "socketcan",
         bitrate: Optional[int] = 1e6,
-        listen_size: Optional[int] = 1e3,
+        listen_size: Optional[int] = None,
     ):
         """
         功能：初始化类时即创建总线对象
-        param1：通道名，如：vcan0, PCAN_USBBUS1, 0
+        param1：通道名，如：vcan0, PCAN_USBBUS1
         param2：接口类型，如：socketcan, pcan, ixxat, vector
         param3：波特率，如：250000, 500000, 1000000
         param4：队列大小，0为无限制，None为不listen
@@ -53,13 +53,13 @@ class Caner:
         数据发送不需要指定data的长度，会自动计算
         """
         self._last_msg = None  # 用于存储最后一次接收到的报文
-        self._bus = can.interface.Bus(channel, interface, bitrate=bitrate)
+        self._bus = can.Bus(channel, interface, bitrate=bitrate)
         self.target_filter_id_set = set()  # 用于存储需要筛选的id
 
         self.listen_size = listen_size
         if listen_size is not None:
-            self._msg_queue = Queue(listen_size)  # 创建一个有限队列
-            logger = can.Logger("logfile.asc")  # 创建一个log文件
+            self._msg_queue = Queue(int(listen_size))  # 创建一个有限队列
+            logger = can.Logger("can_logfile.asc")  # 创建一个log文件
             listeners = [
                 self.__put_msg,  # 回调函数
                 logger,  # 保存报文的对象
@@ -177,7 +177,9 @@ class Caner:
 
             Thread(target=can_recv_thread, daemon=True).start()
 
+    @classmethod
     def send_file(
+        cls,
         id: Optional[int],
         file_path: str,
         bytes_per: Optional[int] = 8,
@@ -200,7 +202,7 @@ class Caner:
         data_len = len(data)
         period = 1 / freq
         for i in range(0, data_len, bytes_per):
-            Caner.send_data(id, data[i : i + bytes_per], is_extended_id)
+            cls.send_data(id, data[i : i + bytes_per], is_extended_id)
             time.sleep(period)
 
 
