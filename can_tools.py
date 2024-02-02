@@ -184,6 +184,7 @@ class Caner:
         bytes_per: Optional[int] = 8,
         interval_per = 1,
         is_extended_id: Optional[bool] = False,
+        max_bytes: Optional[int] = None,
     ):
         """
         功能：发送文件到CAN
@@ -200,6 +201,8 @@ class Caner:
         data = BinTools.read_bin_file(file_path)
         data_len = len(data)
         interval_per /= 1000
+        if max_bytes is not None and data_len > max_bytes:
+            data_len = max_bytes
         for i in range(0, data_len, bytes_per):
             self.send_data(id, data[i : i + bytes_per], is_extended_id)
             time.sleep(interval_per)
