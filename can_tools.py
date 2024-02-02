@@ -35,7 +35,43 @@ from bin_tools import BinTools
 """
 
 
-class Caner:
+class CRC(object):
+    def add_crc16(self, data: bytes) -> bytes:
+        """
+        功能：添加CRC16校验位
+        :param data: 数据
+        :return: 添加CRC16校验位后的数据
+        """
+        crc = 0xFFFF
+        for i in data:
+            crc ^= i
+            for j in range(8):
+                if crc & 0x0001:
+                    crc >>= 1
+                    crc ^= 0xA001
+                else:
+                    crc >>= 1
+        return data + crc.to_bytes(2, "little")
+
+    def add_crc32(self, data: bytes) -> bytes:
+        """
+        功能：添加CRC32校验位
+        :param data: 数据
+        :return: 添加CRC32校验位后的数据
+        """
+        crc = 0xFFFFFFFF
+        for i in data:
+            crc ^= i
+            for j in range(8):
+                if crc & 0x00000001:
+                    crc >>= 1
+                    crc ^= 0xEDB88320
+                else:
+                    crc >>= 1
+        return data + crc.to_bytes(4, "little")
+
+
+class Caner(object):
     def __init__(
         self,
         channel: Optional[str] = "can0",
@@ -53,6 +89,7 @@ class Caner:
         数据发送不需要指定data的长度，会自动计算
         """
         self._last_msg = None  # 用于存储最后一次接收到的报文
+        self._callback_flag = False  # 用于判断是否收到了报文
         self._bus = can.Bus(channel, interface, bitrate=bitrate)
         self.target_filter_id_set = set()  # 用于存储需要筛选的id
 
@@ -61,17 +98,18 @@ class Caner:
             self._msg_queue = Queue(int(listen_size))  # 创建一个有限队列
             logger = can.Logger("can_logfile.asc")  # 创建一个log文件
             listeners = [
-                self.__put_msg,  # 回调函数
+                self.__listen_callback,  # 回调函数
                 logger,  # 保存报文的对象
             ]
             self.notifier = can.Notifier(self._bus, listeners)  # 设置一个监听
 
-    def __put_msg(self, msg):
+    def __listen_callback(self, msg):
         """
         功能：通过队列实现数据的写入和读取
         :param msg: 回调返回的对象
         """
         self._last_msg = msg
+        self._callback_flag = True
         if not self._msg_queue.full():
             self._msg_queue.put_nowait(msg)
         else:
@@ -182,17 +220,20 @@ class Caner:
         id: Optional[int],
         file_path: str,
         bytes_per: Optional[int] = 8,
-        interval_per = 1,
+        interval_per=1,
         is_extended_id: Optional[bool] = False,
         max_bytes: Optional[int] = None,
+        use_crc: bool = False,
     ):
         """
         功能：发送文件到CAN
         :param id: 报文id
         :param file_path: 文件路径
-        :param is_extended_id: 是否为扩展帧
         :param bytes_per: 每次发送的字节数，范围为[1, 8], 默认为一次发送8字节
         :param interval_per: 发送间隔，单位为毫秒，默认为1ms
+        :param is_extended_id: 是否为扩展帧，默认为标准帧
+        :param max_bytes: 最大发送字节数，默认为None
+        :param use_crc: 是否使用CRC32校验位，默认为False
         """
         if not BinTools.check_file(file_path):
             raise Exception("file not exists")
@@ -204,8 +245,18 @@ class Caner:
         if max_bytes is not None and data_len > max_bytes:
             data_len = max_bytes
         for i in range(0, data_len, bytes_per):
+            # 添加CRC校验位
+            if use_crc:
+                data[i : i + bytes_per] = CRC.add_crc32(data[i : i + bytes_per])
+            # 发送数据
             self.send_data(id, data[i : i + bytes_per], is_extended_id)
             time.sleep(interval_per)
+            if use_crc:
+                # 检测是否成功发送（发送数据出错会收到错误反馈，但若数据根本没有发送出去，则不会收到反馈？需要改进）
+                while self._callback_flag:
+                    self._callback_flag = False
+                    self.send_data(id, data[i : i + bytes_per], is_extended_id)
+                    time.sleep(interval_per)
 
 
 if __name__ == "__main__":
