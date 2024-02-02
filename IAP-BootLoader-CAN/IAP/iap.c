@@ -107,6 +107,7 @@ void iap_load_app(u32 appxaddr)
 
         }
 	}
+	else printf("APP栈顶地址不合法!!\r\n");
 }		 
 
 

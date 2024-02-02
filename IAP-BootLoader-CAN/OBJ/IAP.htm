@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\IAP.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\IAP.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Jan 31 12:03:52 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Feb 02 20:43:53 2024
 <BR><P>
 <H3>Maximum Stack Usage =        160 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -225,7 +225,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;iap_load_app
 </UL>
 
-<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 504 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 510 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = main &rArr; iap_write_appbin &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
@@ -1176,10 +1176,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[54]"></a>iap_load_app</STRONG> (Thumb, 110 bytes, Stack size 16 bytes, iap.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = iap_load_app
+<P><STRONG><a name="[54]"></a>iap_load_app</STRONG> (Thumb, 116 bytes, Stack size 16 bytes, iap.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = iap_load_app &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_DeInit
+<BR>[Calls]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_DeInit
 <LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MSR_MSP
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -1193,6 +1194,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_char_file
 </UL>
 <BR>[Called By]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;iap_write_appbin
+<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;iap_load_app
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 

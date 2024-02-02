@@ -1,6 +1,6 @@
 Dependencies for Project 'IAP', Target 'IAP': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (.\main.c)(0x65B9C6A6)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\LCD -I ..\IAP -I ..\HARDWARE\STMFLASH -I ..\HARDWARE\CAN -I ..\HARDWARE\TIMER-IC:\Keil_v5\Packs\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="538" -DSTM32F10X_MD -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
+F (.\main.c)(0x65BCE387)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\LCD -I ..\IAP -I ..\HARDWARE\STMFLASH -I ..\HARDWARE\CAN -I ..\HARDWARE\TIMER-IC:\Keil_v5\Packs\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="538" -DSTM32F10X_MD -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
 I (..\SYSTEM\delay\delay.h)(0x65B39BBC)
 I (..\SYSTEM\sys\sys.h)(0x65B39BBB)
 I (..\USER\stm32f10x.h)(0x65B39B4D)
@@ -526,7 +526,7 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_spi.h)(0x65B39BC6)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x65B39BC5)
 I (..\STM32F10x_FWLib\inc\stm32f10x_wwdg.h)(0x65B39BC4)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x65B39BCC)
-F (..\IAP\iap.c)(0x65B39B69)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\LCD -I ..\IAP -I ..\HARDWARE\STMFLASH -I ..\HARDWARE\CAN -I ..\HARDWARE\TIMER-IC:\Keil_v5\Packs\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="538" -DSTM32F10X_MD -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER-o ..\obj\iap.o --omf_browse ..\obj\iap.crf --depend ..\obj\iap.d)
+F (..\IAP\iap.c)(0x65BCE26E)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I ..\HARDWARE\LED -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\STM32F10x_FWLib\inc -I ..\CORE -I ..\HARDWARE\KEY -I ..\HARDWARE\LCD -I ..\IAP -I ..\HARDWARE\STMFLASH -I ..\HARDWARE\CAN -I ..\HARDWARE\TIMER-IC:\Keil_v5\Packs\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="538" -DSTM32F10X_MD -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER-o ..\obj\iap.o --omf_browse ..\obj\iap.crf --depend ..\obj\iap.d)
 I (..\IAP\iap.h)(0x65B39B69)
 I (..\SYSTEM\sys\sys.h)(0x65B39BBB)
 I (..\USER\stm32f10x.h)(0x65B39B4D)

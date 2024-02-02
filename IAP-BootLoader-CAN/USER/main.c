@@ -30,7 +30,7 @@ int main(void)
     int i = 0;
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
-    uart_init(115200);	//串口初始化为115200
+    uart_init(9600);	//串口初始化为115200
     delay_init();	   	//延时初始化
     CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_9tq,2,CAN_Mode_Normal);//CAN初始化正常模式,波特率1000Kbps
 
@@ -52,8 +52,11 @@ int main(void)
                 printf("非FLASH应用程序,无法执行!\r\n");
                 TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
                 TIM_Cmd(TIM3, DISABLE);
-                break;
             }
+						printf("等待升级!!\r\n");
+            TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+            TIM_Cmd(TIM3, DISABLE);
+						break;
         }
         if(CANRecFlag)
         {
@@ -83,8 +86,10 @@ int main(void)
                     }
                 }
                 else
+								{
 									  LED3=!LED3;
                     printf("缓冲区容量不足!!\r\n");
+								}
             }
 
             if(RxMessage.StdId == 0x02)
