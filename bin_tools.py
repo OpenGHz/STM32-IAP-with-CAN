@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # https://blog.csdn.net/and_then111/article/details/86744938
+import os
 
 
 class BinTools(object):
@@ -75,7 +76,6 @@ class Biner(object):
 
 
 if __name__ == "1":
-    import os
 
     filepath = "x.bin"
     binfile = open(filepath, "rb")  # 打开二进制文件

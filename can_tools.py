@@ -177,13 +177,12 @@ class Caner:
 
             Thread(target=can_recv_thread, daemon=True).start()
 
-    @classmethod
     def send_file(
-        cls,
+        self,
         id: Optional[int],
         file_path: str,
         bytes_per: Optional[int] = 8,
-        freq=100,
+        interval_per = 1,
         is_extended_id: Optional[bool] = False,
     ):
         """
@@ -192,7 +191,7 @@ class Caner:
         :param file_path: 文件路径
         :param is_extended_id: 是否为扩展帧
         :param bytes_per: 每次发送的字节数，范围为[1, 8], 默认为一次发送8字节
-        :param freq: 发送频率，单位为Hz
+        :param interval_per: 发送间隔，单位为毫秒，默认为1ms
         """
         if not BinTools.check_file(file_path):
             raise Exception("file not exists")
@@ -200,10 +199,10 @@ class Caner:
             raise Exception("bytes_per must be in [1, 8]")
         data = BinTools.read_bin_file(file_path)
         data_len = len(data)
-        period = 1 / freq
+        interval_per /= 1000
         for i in range(0, data_len, bytes_per):
-            cls.send_data(id, data[i : i + bytes_per], is_extended_id)
-            time.sleep(period)
+            self.send_data(id, data[i : i + bytes_per], is_extended_id)
+            time.sleep(interval_per)
 
 
 if __name__ == "__main__":
