@@ -220,7 +220,7 @@ class Caner(object):
         id: Optional[int],
         file_path: str,
         bytes_per: Optional[int] = 8,
-        interval_per=1,
+        interval_per: float = 1,
         is_extended_id: Optional[bool] = False,
         max_bytes: Optional[int] = None,
         use_crc: bool = False,
@@ -240,8 +240,8 @@ class Caner(object):
         if bytes_per <= 0 or bytes_per > 8:
             raise Exception("bytes_per must be in [1, 8]")
         data = BinTools.read_bin_file(file_path)
-        data_len = len(data)
-        interval_per /= 1000
+        data_len = len(data)  # 文件总字节数
+        interval_per /= 1000.0
         if max_bytes is not None and data_len > max_bytes:
             data_len = max_bytes
         for i in range(0, data_len, bytes_per):
