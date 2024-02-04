@@ -16,7 +16,7 @@ void iap_write_appbin(u32 WriteAddr,u8 *pBuffer,u32 NumToWrite)
         printf("地址越界!\r\n");
         return;   
     }
-          
+    
     if(WriteAddr % STM_SECTOR_SIZE)
     {
         printf("地址非FLASH扇区首地址!\r\n");
@@ -56,7 +56,6 @@ void iap_write_appbin(u32 WriteAddr,u8 *pBuffer,u32 NumToWrite)
                 FLASH_ProgramHalfWord(WriteAddr, temp);
                 WriteAddr += 2;
             }
-           
             pBuffer += STM_SECTOR_SIZE;
             NumToWrite -= STM_SECTOR_SIZE;
         }
@@ -108,18 +107,4 @@ void iap_load_app(u32 appxaddr)
         }
 	}
 	else printf("APP栈顶地址不合法!!\r\n");
-}		 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

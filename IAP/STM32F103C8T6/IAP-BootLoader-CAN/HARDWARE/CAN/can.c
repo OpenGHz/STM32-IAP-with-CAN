@@ -1,23 +1,8 @@
 #include "can.h"
-#include "led.h"
+//#include "led.h"
 #include "delay.h"
 #include "usart.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK战舰STM32开发板
-//CAN驱动 代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/5/7
-//版本：V1.1 
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved	
-//********************************************************************************
-//V1.1修改说明 20150528
-//修正了CAN初始化函数的相关注释，更正了波特率计算公式
-////////////////////////////////////////////////////////////////////////////////// 	 
- 
+
 //CAN初始化
 //tsjw:重新同步跳跃时间单元.范围:CAN_SJW_1tq~ CAN_SJW_4tq
 //tbs2:时间段2的时间单元.   范围:CAN_BS2_1tq~CAN_BS2_8tq;
@@ -25,8 +10,8 @@
 //brp :波特率分频器.范围:1~1024;  tq=(brp)*tpclk1
 //波特率=Fpclk1/((tbs1+1+tbs2+1+1)*brp);
 //mode:CAN_Mode_Normal,普通模式;CAN_Mode_LoopBack,回环模式;
-//Fpclk1的时钟在初始化的时候设置为36M,如果设置CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_9tq,4,CAN_Mode_LoopBack);
-//则波特率为:18M/((8+9+1)*4)=500Kbps
+//Fpclk1的时钟在初始化的时候设置为36M,如果设置CAN_Mode_Init(CAN_SJW_1tq,CAN_BS2_8tq,CAN_BS1_9tq,2,CAN_Mode_Normal);
+//则波特率为:36M/((8+9+1)*2)=1Mbps
 //返回值:0,初始化OK;
 //    其他,初始化失败; 
 
@@ -42,33 +27,33 @@ u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 	NVIC_InitTypeDef  		NVIC_InitStructure;
 #endif
 
-//  // 非复用CAN
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);//使能PORTA时钟	                   											 
-//	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);//使能CAN1时钟	
-
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
-
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	//上拉输入
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
-
-	// 复用CAN
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);//使能PORTB时钟	                   											 
+  // 非复用CAN
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);//使能PORTA时钟	                   											 
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);//使能CAN1时钟	
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);//使能端口复用时钟
-  GPIO_PinRemapConfig(GPIO_Remap1_CAN1, ENABLE);//应用CAN1的remap模式1，即开启PB8/9的CAN功能。2是开启PD的。
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽
-	GPIO_Init(GPIOB, &GPIO_InitStructure);			//初始化IO
+	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	//上拉输入
-	GPIO_Init(GPIOB, &GPIO_InitStructure);			//初始化IO
+	GPIO_Init(GPIOA, &GPIO_InitStructure);			//初始化IO
+
+//	// 复用CAN
+//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);//使能PORTB时钟	                   											 
+//	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);//使能CAN1时钟	
+//  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);//使能端口复用时钟
+//  GPIO_PinRemapConfig(GPIO_Remap1_CAN1, ENABLE);//应用CAN1的remap模式1，即开启PB8/9的CAN功能。2是开启PD的。
+
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽
+//	GPIO_Init(GPIOB, &GPIO_InitStructure);			//初始化IO
+
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;	//上拉输入
+//	GPIO_Init(GPIOB, &GPIO_InitStructure);			//初始化IO
 
 	/************************************************************/
 	
@@ -112,13 +97,11 @@ u8 CAN_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 }
 
 #if CAN_RX0_INT_ENABLE	//使能RX0中断
-//中断服务函数			    
+//中断服务函数
 void USB_LP_CAN1_RX0_IRQHandler(void)
 {
     CAN_Receive(CAN1, 0, &RxMessage);
     CANRecFlag = 1;
-    //Can_Send_Msg(0X01, RxMessage.Data, RxMessage.DLC);
-		//LED2=!LED2;
 }
 #endif
 
@@ -157,17 +140,3 @@ u8 Can_Receive_Msg(u8 *buf)
     buf[i]=RxMessage.Data[i];  
 	return RxMessage.DLC;	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
